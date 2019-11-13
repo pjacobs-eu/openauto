@@ -15,9 +15,12 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${base_directory}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${base_directory}/bin)
 set(EXECUTABLE_OUTPUT_PATH ${base_directory}/bin)
 
+set(Boost_NO_BOOST_CMAKE 1)
 set(Boost_USE_STATIC_LIBS OFF)
 set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
+
+add_definitions(-DBOOST_ALL_DYN_LINK)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake_modules/")
 SET(CMAKE_CXX_STANDARD 14)
@@ -25,7 +28,10 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS_INIT} -Wall -pedantic -fPIC")
 set(CMAKE_CXX_FLAGS_DEBUG "-g -O0")
 set(CMAKE_CXX_FLAGS_RELEASE "-g -O3")
 
-add_definitions(-DBOOST_ALL_DYN_LINK)
+if (APPLE)
+    set(Qt5_DIR /usr/local/opt/qt/lib/cmake/Qt5)
+    set(OPENSSL_ROOT_DIR /usr/local/opt/openssl)
+endif(APPLE)
 
 find_package(Boost REQUIRED COMPONENTS system log OPTIONAL_COMPONENTS unit_test_framework)
 find_package(libusb-1.0 REQUIRED)
@@ -36,9 +42,21 @@ find_package(rtaudio REQUIRED)
 find_package(taglib REQUIRED)
 find_package(blkid REQUIRED)
 
+### TODO: Should not be done this way? ###
+set(AASDK_LIBRARIES /usr/local/lib/libaasdk.dylib)
+set(AASDK_INCLUDE_DIRS /usr/local/include/aasdk)
+set(AASDK_PROTO_LIBRARIES /usr/local/lib/libaasdk_proto.dylib)
+set(AASDK_PROTO_INCLUDE_DIRS /usr/local/include/aasdk_proto)
+###
+
 if(WIN32)
     set(WINSOCK2_LIBRARIES "ws2_32")
 endif(WIN32)
+
+if (APPLE)
+    set(OPENSSL_INCLUDE_DIR /usr/local/opt/openssl/include)
+    set(OPENSSL_LIBRARIES /usr/local/opt/openssl/lib/libssl.dylib;/usr/local/opt/openssl/lib/libcrypto.dylib)
+endif(APPLE)
 
 if(RPI3_BUILD)
     add_definitions(-DUSE_OMX -DOMX_SKIP64BIT -DRASPBERRYPI3)

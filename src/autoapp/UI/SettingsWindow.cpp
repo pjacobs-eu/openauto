@@ -1129,50 +1129,51 @@ void SettingsWindow::onStopHotspot()
 
 void SettingsWindow::updateSystemInfo()
 {
+    //TODO
     // free ram
-    struct sysinfo info;
-    sysinfo(&info);
-    ui_->valueSystemFreeMem->setText(QString::number(info.freeram/1024/1024) + " MB");
-    // current cpu speed
-    QString freq = configuration_->readFileContent("/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq");
-    int currentfreq = freq.toInt()/1000;
-    ui_->valueSystemCPUFreq->setText(QString::number(currentfreq) + "MHz");
-    // current cpu temp
-    QString temp = configuration_->readFileContent("/sys/class/thermal/thermal_zone0/temp");
-    int currenttemp = temp.toInt()/1000;
-    ui_->valueSystemCPUTemp->setText(QString::number(currenttemp) + "°C");
-    // get remaining times
-    QProcess process;
-    process.start("/bin/bash", QStringList() << "-c" << "systemctl list-timers -all | grep disconnect | awk {'print $1'}");
-    process.waitForFinished(-1);
-    QString stdout = process.readAllStandardOutput();
-    if (stdout.simplified() != "n/a") {
-        process.start("/bin/bash", QStringList() << "-c" << "systemctl list-timers -all | grep disconnect | awk {'print $5\" \"$6'}");
-        process.waitForFinished(-1);
-        QString stdout = process.readAllStandardOutput();
-        if (stdout.simplified() != "") {
-            ui_->valueDisconnectTimer->setText(stdout.simplified());
-        } else {
-            ui_->valueDisconnectTimer->setText("Stopped");
-        }
-    } else {
-        ui_->valueDisconnectTimer->setText("Stopped");
-    }
-    process.start("/bin/bash", QStringList() << "-c" << "systemctl list-timers -all | grep shutdown | awk {'print $1'}");
-    process.waitForFinished(-1);
-    stdout = process.readAllStandardOutput();
-    if (stdout.simplified() != "n/a") {
-        process.start("/bin/bash", QStringList() << "-c" << "systemctl list-timers -all | grep shutdown | awk {'print $5\" \"$6'}");
-        process.waitForFinished(-1);
-        QString stdout = process.readAllStandardOutput();
-        if (stdout.simplified() != "") {
-            ui_->valueShutdownTimer->setText(stdout.simplified());
-        } else {
-            ui_->valueShutdownTimer->setText("Stopped");
-        }
-    } else {
-        ui_->valueShutdownTimer->setText("Stopped");
-    }
+//    struct sysinfo info;
+//    sysinfo(&info);
+//    ui_->valueSystemFreeMem->setText(QString::number(info.freeram/1024/1024) + " MB");
+//    // current cpu speed
+//    QString freq = configuration_->readFileContent("/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq");
+//    int currentfreq = freq.toInt()/1000;
+//    ui_->valueSystemCPUFreq->setText(QString::number(currentfreq) + "MHz");
+//    // current cpu temp
+//    QString temp = configuration_->readFileContent("/sys/class/thermal/thermal_zone0/temp");
+//    int currenttemp = temp.toInt()/1000;
+//    ui_->valueSystemCPUTemp->setText(QString::number(currenttemp) + "°C");
+//    // get remaining times
+//    QProcess process;
+//    process.start("/bin/bash", QStringList() << "-c" << "systemctl list-timers -all | grep disconnect | awk {'print $1'}");
+//    process.waitForFinished(-1);
+//    QString stdout = process.readAllStandardOutput();
+//    if (stdout.simplified() != "n/a") {
+//        process.start("/bin/bash", QStringList() << "-c" << "systemctl list-timers -all | grep disconnect | awk {'print $5\" \"$6'}");
+//        process.waitForFinished(-1);
+//        QString stdout = process.readAllStandardOutput();
+//        if (stdout.simplified() != "") {
+//            ui_->valueDisconnectTimer->setText(stdout.simplified());
+//        } else {
+//            ui_->valueDisconnectTimer->setText("Stopped");
+//        }
+//    } else {
+//        ui_->valueDisconnectTimer->setText("Stopped");
+//    }
+//    process.start("/bin/bash", QStringList() << "-c" << "systemctl list-timers -all | grep shutdown | awk {'print $1'}");
+//    process.waitForFinished(-1);
+//    stdout = process.readAllStandardOutput();
+//    if (stdout.simplified() != "n/a") {
+//        process.start("/bin/bash", QStringList() << "-c" << "systemctl list-timers -all | grep shutdown | awk {'print $5\" \"$6'}");
+//        process.waitForFinished(-1);
+//        QString stdout = process.readAllStandardOutput();
+//        if (stdout.simplified() != "") {
+//            ui_->valueShutdownTimer->setText(stdout.simplified());
+//        } else {
+//            ui_->valueShutdownTimer->setText("Stopped");
+//        }
+//    } else {
+//        ui_->valueShutdownTimer->setText("Stopped");
+//    }
 }
 
 void SettingsWindow::show_tab1()

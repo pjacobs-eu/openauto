@@ -1,4 +1,6 @@
 # Add any directories, files, or patterns you don't want to be tracked by version control
+.idea/
 lib/
 bin/
 CMakeLists.txt.user
+cmake-build-debug/

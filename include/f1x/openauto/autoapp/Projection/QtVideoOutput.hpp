@@ -23,6 +23,7 @@
 #include <boost/noncopyable.hpp>
 #include <f1x/openauto/autoapp/Projection/VideoOutput.hpp>
 #include <f1x/openauto/autoapp/Projection/SequentialBuffer.hpp>
+#include <boost/asio/detail/noncopyable.hpp>
 
 namespace f1x
 {
@@ -33,7 +34,7 @@ namespace autoapp
 namespace projection
 {
 
-class QtVideoOutput: public QObject, public VideoOutput, boost::noncopyable
+class QtVideoOutput: public QObject, public VideoOutput, boost::asio::noncopyable
 {
     Q_OBJECT
 

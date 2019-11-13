@@ -28,6 +28,7 @@ else (BLKID_LIBRARIES AND BLKID_INCLUDE_DIRS)
       /usr/local/include
       /opt/local/include
       /sw/include
+      /usr/local/opt/util-linux/include
 	PATH_SUFFIXES
           blkid
   )
@@ -40,6 +41,7 @@ else (BLKID_LIBRARIES AND BLKID_INCLUDE_DIRS)
       /usr/local/lib
       /opt/local/lib
       /sw/lib
+      /usr/local/opt/util-linux/lib
   )
 
   set(BLKID_INCLUDE_DIRS
