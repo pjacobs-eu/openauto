@@ -18,6 +18,7 @@
 
 #include <QBluetoothLocalDevice>
 #include <f1x/openauto/autoapp/Projection/IBluetoothDevice.hpp>
+#include <QBluetoothServiceInfo>
 
 #pragma once
 
@@ -60,6 +61,7 @@ private:
     std::unique_ptr<QBluetoothLocalDevice> localDevice_;
     PairingPromise::Pointer pairingPromise_;
     QBluetoothAddress pairingAddress_;
+    QBluetoothServiceInfo serviceInfo_;
 };
 
 }

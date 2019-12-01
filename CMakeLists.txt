@@ -29,7 +29,7 @@ set(CMAKE_CXX_FLAGS_DEBUG "-g -O0")
 set(CMAKE_CXX_FLAGS_RELEASE "-g -O3")
 
 if (APPLE)
-    set(Qt5_DIR /usr/local/opt/qt/lib/cmake/Qt5)
+    set(Qt5_DIR /usr/local/Qt-5.13.2/lib/cmake/Qt5)
     set(OPENSSL_ROOT_DIR /usr/local/opt/openssl)
 endif(APPLE)
 

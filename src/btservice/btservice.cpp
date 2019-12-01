@@ -17,22 +17,28 @@
 */
 
 #include <QApplication>
+#include <QtBluetooth>
 #include <f1x/openauto/Common/Log.hpp>
 #include <f1x/openauto/btservice/AndroidBluetoothService.hpp>
 #include <f1x/openauto/btservice/AndroidBluetoothServer.hpp>
 
 namespace btservice = f1x::openauto::btservice;
 
-int main(int argc, char* argv[])
-{
+int main(int argc, char *argv[]) {
+    QLoggingCategory::setFilterRules(QStringLiteral("qt.bluetooth*=true"));
     QApplication qApplication(argc, argv);
 
-    const QBluetoothAddress address;
+    QBluetoothLocalDevice localDevice;
+    const QBluetoothAddress address = localDevice.address();
     const uint16_t portNumber = 5000;
 
+    // Turn Bluetooth on
+    localDevice.powerOn();
+    // Make it visible to others
+    //localDevice.setHostMode(QBluetoothLocalDevice::HostConnectable);
+
     btservice::AndroidBluetoothServer androidBluetoothServer;
-    if(!androidBluetoothServer.start(address, portNumber))
-    {
+    if (!androidBluetoothServer.start(address, portNumber)) {
         OPENAUTO_LOG(error) << "[btservice] Server start failed.";
         return 2;
     }
@@ -41,17 +47,16 @@ int main(int argc, char* argv[])
                        << ", port: " << portNumber;
 
     btservice::AndroidBluetoothService androidBluetoothService(portNumber);
-    if(!androidBluetoothService.registerService(address))
-    {
+    if (!androidBluetoothService.registerService(address)) {
         OPENAUTO_LOG(error) << "[btservice] Service registration failed.";
         return 1;
-    }
-    else
-    {
+    } else {
         OPENAUTO_LOG(info) << "[btservice] Service registered, port: " << portNumber;
     }
 
-    qApplication.exec();
+    QApplication::exec();
+
+    OPENAUTO_LOG(info) << "stop";
     androidBluetoothService.unregisterService();
 
     return 0;
