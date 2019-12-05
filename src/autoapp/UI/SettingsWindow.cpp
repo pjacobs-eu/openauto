@@ -469,7 +469,7 @@ void SettingsWindow::onSave()
 void SettingsWindow::onResetToDefaults()
 {
     QMessageBox confirmationMessage(QMessageBox::Question, "Confirmation", "Are you sure you want to reset settings?", QMessageBox::Yes | QMessageBox::Cancel);
-    confirmationMessage.setWindowFlags(Qt::WindowStaysOnTopHint);
+    //confirmationMessage.setWindowFlags(Qt::WindowStaysOnTopHint);
     if(confirmationMessage.exec() == QMessageBox::Yes)
     {
         configuration_->reset();

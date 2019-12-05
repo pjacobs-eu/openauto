@@ -51,17 +51,22 @@ void LocalBluetoothDevice::createBluetoothLocalDevice()
     connect(localDevice_.get(), &QBluetoothLocalDevice::pairingFinished, this, &LocalBluetoothDevice::onPairingFinished);
     connect(localDevice_.get(), &QBluetoothLocalDevice::error, this, &LocalBluetoothDevice::onError);
     connect(localDevice_.get(), &QBluetoothLocalDevice::hostModeStateChanged, this, &LocalBluetoothDevice::onHostModeStateChanged);
+
+    localDevice_->powerOn();
     localDevice_->setHostMode(QBluetoothLocalDevice::HostDiscoverable);
+
+    rfcommServer_ = std::make_unique<QBluetoothServer>(QBluetoothServiceInfo::RfcommProtocol, this);
+    connect(rfcommServer_.get(), &QBluetoothServer::newConnection, this, &LocalBluetoothDevice::onClientConnected, Qt::QueuedConnection);
+    if (rfcommServer_->listen(localDevice_->address())) {
+        OPENAUTO_LOG(debug) << "Listening for rfcomm connections on port " << rfcommServer_->serverPort();
+    }
 
     //"4de17a00-52cb-11e6-bdf4-0800200c9a66";
     //"669a0c20-0008-f4bd-e611-cb52007ae14d";
     const QBluetoothUuid serviceUuid(QLatin1String("4de17a00-52cb-11e6-bdf4-0800200c9a66"));
 
-
     QBluetoothServiceInfo::Sequence classId;
     classId << QVariant::fromValue(QBluetoothUuid(QBluetoothUuid::SerialPort));
-    classId << QVariant::fromValue(QBluetoothUuid(QBluetoothUuid::AudioSink));
-    classId << QVariant::fromValue(QBluetoothUuid(QBluetoothUuid::Headset));
     serviceInfo_.setAttribute(QBluetoothServiceInfo::BluetoothProfileDescriptorList, classId);
     classId.prepend(QVariant::fromValue(serviceUuid));
     serviceInfo_.setAttribute(QBluetoothServiceInfo::ServiceClassIds, classId);
@@ -80,10 +85,9 @@ void LocalBluetoothDevice::createBluetoothLocalDevice()
     protocolDescriptorList.append(QVariant::fromValue(protocol));
     protocol.clear();
     protocol << QVariant::fromValue(QBluetoothUuid(QBluetoothUuid::Rfcomm))
-             << QVariant::fromValue(quint16(5000));
+             << QVariant::fromValue(quint8(rfcommServer_->serverPort()));
     protocolDescriptorList.append(QVariant::fromValue(protocol));
     serviceInfo_.setAttribute(QBluetoothServiceInfo::ProtocolDescriptorList, protocolDescriptorList);
-
     serviceInfo_.registerService(localDevice_->address());
 }
 
@@ -210,6 +214,19 @@ void LocalBluetoothDevice::onHostModeStateChanged(QBluetoothLocalDevice::HostMod
         pairingPromise_->reject();
         pairingPromise_.reset();
         pairingAddress_ = QBluetoothAddress();
+    }
+}
+
+void LocalBluetoothDevice::onClientConnected() {
+    auto socket = rfcommServer_->nextPendingConnection();
+
+    if(socket != nullptr)
+    {
+        OPENAUTO_LOG(info) << "[BluetoothServer] rfcomm client connected, peer name: " << socket->peerName().toStdString();
+    }
+    else
+    {
+        OPENAUTO_LOG(error) << "[BluetoothServer] received null socket during client connection.";
     }
 }
 

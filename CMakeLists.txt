@@ -43,9 +43,9 @@ find_package(taglib REQUIRED)
 find_package(blkid REQUIRED)
 
 ### TODO: Should not be done this way? ###
-set(AASDK_LIBRARIES /usr/local/lib/libaasdk.dylib)
+set(AASDK_LIBRARIES /usr/local/lib/libaasdk.so)
 set(AASDK_INCLUDE_DIRS /usr/local/include/aasdk)
-set(AASDK_PROTO_LIBRARIES /usr/local/lib/libaasdk_proto.dylib)
+set(AASDK_PROTO_LIBRARIES /usr/local/lib/libaasdk_proto.so)
 set(AASDK_PROTO_INCLUDE_DIRS /usr/local/include/aasdk_proto)
 ###
 
