@@ -111,17 +111,3 @@ target_link_libraries(autoapp
                         ${BLKID_LIBRARIES}
                         ${AASDK_PROTO_LIBRARIES}
                         ${AASDK_LIBRARIES})
-
-set(btservice_sources_directory ${sources_directory}/btservice)
-set(btservice_include_directory ${include_directory}/f1x/openauto/btservice)
-file(GLOB_RECURSE btservice_source_files ${btservice_sources_directory}/*.cpp ${btservice_include_directory}/*.hpp ${common_include_directory}/*.hpp)
-
-add_executable(btservice ${btservice_source_files})
-
-target_link_libraries(btservice
-                        ${Boost_LIBRARIES}
-                        ${Qt5Bluetooth_LIBRARIES}
-                        ${Qt5Network_LIBRARIES}
-                        ${Qt5MultimediaWidgets_LIBRARIES}
-                        ${PROTOBUF_LIBRARIES}
-                        ${AASDK_PROTO_LIBRARIES})
